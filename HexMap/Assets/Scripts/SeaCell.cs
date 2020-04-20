@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FieldCell : HexCell
+public class SeaCell : HexCell
 {
     Mesh mesh;
     [SerializeField]
     Material mat;
     [SerializeField]
-    bool isHereAFarm = false, walkable = false;
+    bool isHereAShark=false, walkable = false;
+
     void Start()
     {
         mesh = GetComponent<MeshFilter>().mesh = new Mesh();
