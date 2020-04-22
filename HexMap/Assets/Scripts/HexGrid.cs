@@ -34,6 +34,7 @@ public class HexGrid : MonoBehaviour
     }
     private void Start()
     {
+        cells[0].X = cells[0].Y = cells[0].Z = 0;
         for (int i = 0; i < cells.Length; i ++)
         {
             if (i >= width)
@@ -44,7 +45,9 @@ public class HexGrid : MonoBehaviour
             {
                 cells[i].N = cells[i + width];
             }   // North
-            if (i % width != width - 1 && i<width && i%2!=0)
+
+
+            if (i % width != width - 1 &&( i>=width||(i<width && i%2!=0)))
             {
                 if ((i % width % 2) != 0)
                 {
@@ -56,19 +59,7 @@ public class HexGrid : MonoBehaviour
                 }
             }   // South-East
             
-            if (i % width != width - 1 && i < width*(height-1))
-            {
-                if ((i % width % 2) != 0)
-                {
-                    cells[i].NE = cells[i + 1 + width];
-                }
-                else
-                {
-                    cells[i].NE = cells[i + 1];
-                }
-            }  // South-West
-
-            if (i % width != 0 && i < width && i % 2 != 0)
+            if (i % width != 0 && (i > width || (i < width && i % 2 != 0)))
             {
                 if ((i % width % 2) != 0)
                 {
@@ -76,13 +67,24 @@ public class HexGrid : MonoBehaviour
                 }
                 else
                 {
-                    cells[i].SW = cells[i - 1 - width];
+                    cells[i].SW = cells[i - width-1];
                 }
-            }     // North-East
-            
-            if (i % width != 0 && i > width*(height-1) && i%width%2==0)
+            }  // South-West
+
+            if (i % width != width-1 && ((i < cells.Length-width) ||((i>=cells.Length-width)&& i %width% 2 == 0)))
             {
-                Debug.Log(i.ToString());
+                if ((i % width % 2)== 0)
+                {
+                    cells[i].NE = cells[i + 1];
+                }
+                else
+                {
+                    cells[i].NE = cells[i+ 1 + width];
+                }
+            }     //North-East
+
+            if (i % width !=0&& (i<width*(height-1)||(i > width * (height - 1) && i % width % 2 == 0)))
+            {
                 if ((i % width % 2) != 0)
                 {
                     cells[i].NW = cells[i - 1 + width];
@@ -93,10 +95,59 @@ public class HexGrid : MonoBehaviour
                 }
             }   //North-West
 
-        }
 
+
+                if (cells[i].N != null)
+                {
+                    cells[i].N.X = cells[i].X + 1;
+                    cells[i].N.Y = cells[i].Y;
+                    cells[i].N.Z = cells[i].Z - 1;
+                }
+                if (cells[i].S != null)
+                {
+                    cells[i].S.X = cells[i].X - 1;
+                    cells[i].S.Y = cells[i].Y;
+                    cells[i].S.Z = cells[i].Z + 1;
+                }
+                if (cells[i].NW != null)
+                {
+                    cells[i].NW.X = cells[i].X + 1;
+                    cells[i].NW.Y = cells[i].Y - 1;
+                    cells[i].NW.Z = cells[i].Z;
+                }
+
+                if (cells[i].SW != null)
+                {
+                    cells[i].SW.X = cells[i].X;
+                    cells[i].SW.Y = cells[i].Y - 1;
+                    cells[i].SW.Z = cells[i].Z + 1;
+                }
+
+                if (cells[i].NE != null)
+                {
+                    cells[i].NE.X = cells[i].X;
+                    cells[i].NE.Y = cells[i].Y + 1;
+                    cells[i].NE.Z = cells[i].Z - 1;
+                }
+
+                if (cells[i].SE != null)
+                {
+                    cells[i].SE.X = cells[i].X - 1;
+                    cells[i].SE.Y = cells[i].Y + 1;
+                    cells[i].SE.Z = cells[i].Z;
+                }
+
+
+                Text label = Instantiate(cellLabelPrefab, null);
+                label.rectTransform.SetParent(gridCanvas.transform, false);
+                label.rectTransform.anchoredPosition =
+                    new Vector2(cells[i].transform.position.x, cells[i].transform.position.z);
+                label.text = cells[i].X.ToString() + "\n" + cells[i].Y.ToString() + "\n" + cells[i].Z.ToString();
+            }
+        
     }
 
+    
         void CreateCell(int x, int z, int i)
         {
             Vector3 pos;
@@ -123,15 +174,12 @@ public class HexGrid : MonoBehaviour
             {
                 cells[i] = Instantiate(mCell, pos, Quaternion.identity, null);
             }
-            Text label = Instantiate(cellLabelPrefab, null);
-            label.rectTransform.SetParent(gridCanvas.transform, false);
-            label.rectTransform.anchoredPosition =
-                new Vector2(pos.x, pos.z);
-            label.text = x.ToString() + "\n" + z.ToString();
 
-        }
+       
+
+    }
 
 
-    
+
 }
 

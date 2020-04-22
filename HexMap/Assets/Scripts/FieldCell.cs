@@ -13,12 +13,11 @@ public class FieldCell : HexCell
     {
         mesh = GetComponent<MeshFilter>().mesh = new Mesh();
         mesh.name = "Hex";
-        Vector3[] vertices = new Vector3[7];
+        Vector3[] vertices = new Vector3[6];
         for (int i = 0; i < HexMetrics.corners.Length; i++)
         {
             vertices[i] = HexMetrics.corners[i];
         }
-        vertices[6] = transform.localPosition;
 
         mesh.vertices = vertices;
         mesh.triangles = new int[12] { 0, 1, 2, 2, 3, 4, 4, 5, 0, 0, 2, 4 };
