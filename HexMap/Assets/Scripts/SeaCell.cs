@@ -39,12 +39,5 @@ public class SeaCell : HexCell
         gameObject.AddComponent<MeshCollider>();
 
     }
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.black;
-        for (int i = 0; i <vertices.Length; i++)
-        {
-            Gizmos.DrawSphere(vertices[i],0.3f);
-        }
-    }
+
 }

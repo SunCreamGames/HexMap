@@ -168,11 +168,11 @@ public class HexGrid : MonoBehaviour
             }
             else if (sa == 1)
             {
-                cells[i] = Instantiate(sCell, pos, Quaternion.identity, null);
+                cells[i] = Instantiate(mCell, pos, Quaternion.identity, null);
             }
             else
             {
-                cells[i] = Instantiate(sCell, pos, Quaternion.identity, null);
+                cells[i] = Instantiate(fCell, pos, Quaternion.identity, null);
             }
 
        
