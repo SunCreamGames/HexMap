@@ -96,9 +96,12 @@ MonoBehaviour:
   Y: 0
   Z: 0
   Cost: 0
+  N: {fileID: 0}
   NE: {fileID: 0}
-  E: {fileID: 0}
   SE: {fileID: 0}
+  S: {fileID: 0}
   SW: {fileID: 0}
-  W: {fileID: 0}
   NW: {fileID: 0}
+  mat: {fileID: 2100000, guid: b908e1284adeb724aabb397fa6e13a36, type: 2}
+  isHereAFarm: 0
+  walkable: 0

@@ -9,20 +9,42 @@ public class SeaCell : HexCell
     Material mat;
     [SerializeField]
     bool isHereAShark=false, walkable = false;
-
+    Vector3[] vertices;
     void Start()
     {
         mesh = GetComponent<MeshFilter>().mesh = new Mesh();
+        mesh.Clear();
         mesh.name = "Hex";
-        Vector3[] vertices = new Vector3[6];
+        vertices = new Vector3[HexMetrics.corners.Length+1];
         for (int i = 0; i < HexMetrics.corners.Length; i++)
         {
             vertices[i] = HexMetrics.corners[i];
         }
+        
+
+
+        //for (int i = 7; i < 7+HexMetrics.corners.Length; i++)
+        //{
+        //    vertices[i+1] = HexMetrics.corners[i];
+        //}
+
 
         mesh.vertices = vertices;
-        mesh.triangles = new int[12] { 0, 1, 2, 2, 3, 4, 4, 5, 0, 0, 2, 4 };
+        Debug.Log("1");
+        mesh.triangles = new int[18] {0,1,2,0,2,3,0,3,4,0,4,5,0,5,6,0,6,1};
         GetComponent<Renderer>().material = mat;
         mesh.RecalculateNormals();
+        Debug.Log("2");
+
+        gameObject.AddComponent<MeshCollider>();
+
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.black;
+        for (int i = 0; i <vertices.Length; i++)
+        {
+            Gizmos.DrawSphere(vertices[i],0.3f);
+        }
     }
 }

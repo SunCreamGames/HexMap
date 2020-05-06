@@ -207,7 +207,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
   m_LocalRotation: {x: 0.4082179, y: -0.23456968, z: 0.10938163, w: 0.8754262}
-  m_LocalPosition: {x: 0, y: 2.9999619, z: -0.000030517578}
+  m_LocalPosition: {x: 194.6, y: 3, z: 112.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -223,6 +223,7 @@ GameObject:
   m_Component:
   - component: {fileID: 939089094}
   - component: {fileID: 939089095}
+  - component: {fileID: 939089096}
   m_Layer: 0
   m_Name: Hex Grid
   m_TagString: Untagged
@@ -257,13 +258,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce90ada75da3d084c951202a38297b05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 10
-  height: 10
-  fCell: {fileID: 5007252382051740425, guid: 8471c32e3a456164ba0d1d44f49f3840, type: 3}
+  width: 5
+  height: 8
+  fCell: {fileID: 6158593689462781980, guid: 8471c32e3a456164ba0d1d44f49f3840, type: 3}
   mCell: {fileID: 3034230941579486356, guid: 9fbff868c6928ea49ab4bfa613745584, type: 3}
   sCell: {fileID: 655107148807468573, guid: e0140d27ea6e21e45af3efadc2fa6f81, type: 3}
   cellLabelPrefab: {fileID: 4336946620054404194, guid: 1dbdb2a0e16b8794eb7b041805d8488e,
     type: 3}
+--- !u!114 &939089096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939089093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c191d397a5dbcb42a6e06d3add1e258, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

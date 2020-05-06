@@ -7,5 +7,6 @@ public abstract class HexCell : MonoBehaviour
 
     public int X, Y, Z, Cost;
     public HexCell N, NE, SE, S, SW, NW;
+   
 }
 

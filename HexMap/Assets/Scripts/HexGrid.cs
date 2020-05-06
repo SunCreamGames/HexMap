@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class HexGrid : MonoBehaviour
 {
-
     [SerializeField]
     int width = 10, height = 10;
     [SerializeField]
@@ -15,7 +14,7 @@ public class HexGrid : MonoBehaviour
     MountainCell mCell;
     [SerializeField]
     SeaCell sCell;
-    HexCell[] cells;
+    public static HexCell[] cells;
     public Text cellLabelPrefab;
 
     Canvas gridCanvas;
@@ -32,6 +31,7 @@ public class HexGrid : MonoBehaviour
             }
         }
     }
+    
     private void Start()
     {
         cells[0].X = cells[0].Y = cells[0].Z = 0;
@@ -168,11 +168,11 @@ public class HexGrid : MonoBehaviour
             }
             else if (sa == 1)
             {
-                cells[i] = Instantiate(fCell, pos, Quaternion.identity, null);
+                cells[i] = Instantiate(sCell, pos, Quaternion.identity, null);
             }
             else
             {
-                cells[i] = Instantiate(mCell, pos, Quaternion.identity, null);
+                cells[i] = Instantiate(sCell, pos, Quaternion.identity, null);
             }
 
        
