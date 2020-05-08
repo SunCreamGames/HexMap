@@ -138,11 +138,11 @@ public class HexGrid : MonoBehaviour
                 }
 
 
-                Text label = Instantiate(cellLabelPrefab, null);
-                label.rectTransform.SetParent(gridCanvas.transform, false);
-                label.rectTransform.anchoredPosition =
-                    new Vector2(cells[i].transform.position.x, cells[i].transform.position.z);
-                label.text = cells[i].X.ToString() + "\n" + cells[i].Y.ToString() + "\n" + cells[i].Z.ToString();
+            //    Text label = Instantiate(cellLabelPrefab, null);
+            //    label.rectTransform.SetParent(gridCanvas.transform, false);
+            //    label.rectTransform.anchoredPosition =
+            //        new Vector2(cells[i].transform.position.x, cells[i].transform.position.z);
+            //    label.text = cells[i].X.ToString() + "\n" + cells[i].Y.ToString() + "\n" + cells[i].Z.ToString();
             }
         
     }
