@@ -147,7 +147,10 @@ public class HexGrid : MonoBehaviour
         
     }
 
-    
+    public HexCell[] ReturnCells()
+    {
+        return cells;
+    }
         void CreateCell(int x, int z, int i)
         {
             Vector3 pos;
