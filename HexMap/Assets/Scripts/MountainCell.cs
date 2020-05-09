@@ -12,6 +12,8 @@ public class MountainCell : HexCell
     bool walkable = false;
     void Start()
     {
+        Cost = 25;
+
         mesh = GetComponent<MeshFilter>().mesh = new Mesh();
         mesh.Clear();
         mesh.name = "Hex";
@@ -30,12 +32,9 @@ public class MountainCell : HexCell
 
 
         mesh.vertices = vertices;
-        Debug.Log("1");
         mesh.triangles = new int[18] { 0, 1, 2, 0, 2, 3, 0, 3, 4, 0, 4, 5, 0, 5, 6, 0, 6, 1 };
         GetComponent<Renderer>().material = mat;
         mesh.RecalculateNormals();
-        Debug.Log("2");
-
         gameObject.AddComponent<MeshCollider>();
 
     }

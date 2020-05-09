@@ -11,20 +11,19 @@ public class PathFinding : MonoBehaviour
 {
     Camera cam;
      List<HexCell> reachableCells;
+    [SerializeField]
      HexCell startCell, endCell;
      Material tempStart, tempEnd;
-     
+    RaycastHit hit;
+    Ray ray;
 
     private void Start()
     {
-    
         cam = Camera.main;
         reachableCells = new List<HexCell>();
     }
     void Update()
     {
-        RaycastHit hit;
-        Ray ray;
         if (Input.GetMouseButtonDown(0))
         {
             ray = cam.ScreenPointToRay(Input.mousePosition);
@@ -32,7 +31,6 @@ public class PathFinding : MonoBehaviour
             {
                 if (hit.collider.gameObject.GetComponent<HexCell>() != null)
                 {
-
                     if (hit.collider.gameObject.GetComponent<HexCell>() == endCell)
                     {
                         if (startCell != null)
@@ -91,9 +89,13 @@ public class PathFinding : MonoBehaviour
     }
     public void AStar()
     {
+        Debug.Log("Astar Started");
+
         reachableCells.Add(startCell);
         while (!reachableCells.Contains(endCell))
         {
+            Debug.Log("Visit start");
+
             Visit(reachableCells.Min(), endCell);
         }
     }
@@ -101,8 +103,12 @@ public class PathFinding : MonoBehaviour
     {
         foreach (HexCell c in cell.GetNeighbours())
         {
+            Debug.Log("Nei foreach");
+
             if (c != null)
             {
+                Debug.Log("Neil rePaint");
+
                 CountCellParam(cell, c, endCell);
                 c.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/NeiColor");
             }
@@ -118,6 +124,7 @@ public class PathFinding : MonoBehaviour
             if (cell.PathCost == 0 || prevCell.PathCost + cell.Cost < cell.PathCost)
                 cell.PathCost = prevCell.PathCost + cell.Cost;
             reachableCells.Add(cell);
+            reachableCells.Remove(prevCell);
         }
         catch
         {
@@ -125,10 +132,8 @@ public class PathFinding : MonoBehaviour
         }
     }
 
-     private float GetDistance(HexCell fromCell, HexCell toCell)
+     private int GetDistance(HexCell fromCell, HexCell toCell)
     {
-        float distX = fromCell.transform.position.x - toCell.transform.position.x,
-            distY = fromCell.transform.position.y - toCell.transform.position.y;
-        return Mathf.Sqrt(Mathf.Pow(distX, 2) + Mathf.Pow(distY, 2));
+        return (Math.Abs(toCell.Y- fromCell.Y)+Math.Abs(toCell.X- fromCell.X)+Math.Abs(toCell.Z- fromCell.Z))/2;
     }
 }

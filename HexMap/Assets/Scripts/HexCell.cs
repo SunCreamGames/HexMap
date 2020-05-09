@@ -6,8 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
 public abstract class HexCell : MonoBehaviour , IComparable
 {
-    public int X, Y, Z, Cost, PathCost;
-    public float DestinationDistance;
+    [SerializeField]
+    public int X, Y, Z, Cost, PathCost, DestinationDistance, abba;
     public HexCell N, NE, SE, S, SW, NW;
     public IEnumerable<HexCell> GetNeighbours()
     {
@@ -18,11 +18,12 @@ public abstract class HexCell : MonoBehaviour , IComparable
         yield return SW;
         yield return NW;
     }
-    public float GetCost 
-    { 
+    public float GetCost
+    {
         get
         {
-            return PathCost + DestinationDistance;
+            abba = PathCost + DestinationDistance;
+            return abba;
         }
     }
 

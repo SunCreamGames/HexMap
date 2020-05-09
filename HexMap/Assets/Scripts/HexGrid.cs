@@ -16,9 +16,22 @@ public class HexGrid : MonoBehaviour
     SeaCell sCell;
     public static HexCell[] cells;
     public Text cellLabelPrefab;
-
+    RaycastHit hit;
+    Ray ray;
     Canvas gridCanvas;
+    Camera cam;
 
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0)&&Input.GetAxis("Jump")>0)
+        {
+            ray = cam.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit))
+            {
+                hit.collider.gameObject.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/WayColor");
+              }
+        }
+    }
     void Awake()
     {
         gridCanvas = GetComponentInChildren<Canvas>();
@@ -34,6 +47,7 @@ public class HexGrid : MonoBehaviour
     
     private void Start()
     {
+        cam = Camera.main;
         cells[0].X = cells[0].Y = cells[0].Z = 0;
         for (int i = 0; i < cells.Length; i ++)
         {
@@ -138,12 +152,13 @@ public class HexGrid : MonoBehaviour
                 }
 
 
-            //    Text label = Instantiate(cellLabelPrefab, null);
-            //    label.rectTransform.SetParent(gridCanvas.transform, false);
-            //    label.rectTransform.anchoredPosition =
-            //        new Vector2(cells[i].transform.position.x, cells[i].transform.position.z);
-            //    label.text = cells[i].X.ToString() + "\n" + cells[i].Y.ToString() + "\n" + cells[i].Z.ToString();
-            }
+            Text label = Instantiate(cellLabelPrefab, null);
+            label.rectTransform.SetParent(gridCanvas.transform, false);
+            label.rectTransform.anchoredPosition =
+                new Vector2(cells[i].transform.position.x, cells[i].transform.position.z);
+            label.text = cells[i].X.ToString() + "\n" + cells[i].Y.ToString() + "\n" + cells[i].Z.ToString();
+        }
+            
         
     }
 
@@ -164,15 +179,15 @@ public class HexGrid : MonoBehaviour
             }
 
 
-            int sa = Random.Range(0, 3);
-            if (sa == 0)
+            int sa = Random.Range(0, 10);
+            if (sa < 4)
             {
                 cells[i] = Instantiate(sCell, pos, Quaternion.identity, null);
             }
-            else if (sa == 1)
-            {
-                cells[i] = Instantiate(mCell, pos, Quaternion.identity, null);
-            }
+            //else if (sa <5 )
+            //{
+            //    cells[i] = Instantiate(mCell, pos, Quaternion.identity, null);
+            //}
             else
             {
                 cells[i] = Instantiate(fCell, pos, Quaternion.identity, null);
