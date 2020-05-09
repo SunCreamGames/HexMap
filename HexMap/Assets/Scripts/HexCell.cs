@@ -9,6 +9,7 @@ public abstract class HexCell : MonoBehaviour , IComparable
     [SerializeField]
     public int X, Y, Z, Cost, PathCost, DestinationDistance, abba;
     public HexCell N, NE, SE, S, SW, NW;
+    public HexCell Parent { get; }
     public IEnumerable<HexCell> GetNeighbours()
     {
         yield return N;
