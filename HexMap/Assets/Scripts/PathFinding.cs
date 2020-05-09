@@ -10,27 +10,47 @@ using UnityEditor.PackageManager;
 
 public class PathFinding : MonoBehaviour
 {
+    bool canWork;
     Camera cam;
      List<HexCell> reachableCells, wayCells, mainWay;
     [SerializeField]
      HexCell startCell, endCell;
      Material tempStart, tempEnd;
+    Timer stepTimer;
     RaycastHit hit;
     Ray ray;
 
     private void Start()
     {
+        stepTimer = GetComponent<Timer>();
+        stepTimer.Duration = 3f;
+        canWork = true;
         cam = Camera.main;
         reachableCells = new List<HexCell>();
         wayCells= new List<HexCell>();
     }
  
-    public void AStar()
+    public void PathFind()
     {
+        StartCoroutine(AStar());
+    }
+    IEnumerator AStar()
+    {
+        Debug.Log("Astar Started");
+
         reachableCells.Add(startCell);
         while (!reachableCells.Contains(endCell))
         {
-            Visit(reachableCells.Min());
+            Debug.Log("Visit start");
+            if (wayCells.Contains(reachableCells.Min()))
+            {
+                reachableCells.Remove(reachableCells.Min());
+            }
+            else
+            {
+                yield return new WaitForSeconds(2f);
+                Visit(reachableCells.Min(), endCell);
+            }
         }
         HexCell curCell = endCell.Parent;
         while (curCell != startCell)
@@ -41,7 +61,7 @@ public class PathFinding : MonoBehaviour
     }
     private void Visit(HexCell cell)
     {
-        try
+        foreach (HexCell c in cell.GetNeighbours())
         {
             foreach (HexCell c in cell.GetNeighbours())
             {
@@ -54,10 +74,6 @@ public class PathFinding : MonoBehaviour
             reachableCells.Remove(cell);
             wayCells.Add(cell);
             cell.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/WayColor");
-        }
-        catch
-        {
-            Debug.Log("GAVNO");
         }
     }
      private void CountCellParam(HexCell prevCell, HexCell cell)
