@@ -180,14 +180,14 @@ public class HexGrid : MonoBehaviour
 
 
             int sa = Random.Range(0, 10);
-            if (sa < 4)
+            if (sa < 6)
             {
                 cells[i] = Instantiate(sCell, pos, Quaternion.identity, null);
             }
-            //else if (sa <5 )
-            //{
-            //    cells[i] = Instantiate(mCell, pos, Quaternion.identity, null);
-            //}
+           //else if (sa <5 )
+           //{
+           //    cells[i] = Instantiate(mCell, pos, Quaternion.identity, null);
+           //}
             else
             {
                 cells[i] = Instantiate(fCell, pos, Quaternion.identity, null);

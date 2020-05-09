@@ -42,6 +42,16 @@ public class PathFinding : MonoBehaviour
                 Visit(reachableCells.Min(), endCell);
             }
         }
+        HexCell curCell = endCell.Parent;
+        while (curCell != startCell)
+        {
+            if (curCell == null)
+            {
+                Debug.Log("AAAA");
+            }
+            curCell.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/FinalWayColor");
+            curCell = curCell.Parent;
+        }
     }
      private void Visit(HexCell cell, HexCell endCell)
     {
@@ -51,7 +61,7 @@ public class PathFinding : MonoBehaviour
 
             if (c != null)
             {
-                Debug.Log("Neil rePaint");
+                Debug.Log("Neil rePaint");          
                 CountCellParam(cell, c, endCell);
                 if (!wayCells.Contains(c))
                 {
@@ -68,9 +78,14 @@ public class PathFinding : MonoBehaviour
         {
             cell.PathCost = prevCell.PathCost + cell.Cost;
             if (cell.DestinationDistance == 0)
+            {
                 cell.DestinationDistance = GetDistance(cell, endCell);
-            if (cell.PathCost == 0 || prevCell.PathCost + cell.Cost < cell.PathCost)
+            }
+            if ((cell.PathCost == 0 && cell!= startCell)|| prevCell.PathCost + cell.Cost < cell.PathCost)
+            {
                 cell.PathCost = prevCell.PathCost + cell.Cost;
+                cell.Parent = prevCell;
+            }
             reachableCells.Add(cell);
             reachableCells.Remove(prevCell);
         }
@@ -82,7 +97,7 @@ public class PathFinding : MonoBehaviour
 
      private int GetDistance(HexCell fromCell, HexCell toCell)
     {
-        return (Math.Abs(toCell.Y- fromCell.Y)+Math.Abs(toCell.X- fromCell.X)+Math.Abs(toCell.Z- fromCell.Z))/2;
+        return 10*(Math.Abs(toCell.Y- fromCell.Y)+Math.Abs(toCell.X- fromCell.X)+Math.Abs(toCell.Z- fromCell.Z))/2;
     }
     void Update()
     {
