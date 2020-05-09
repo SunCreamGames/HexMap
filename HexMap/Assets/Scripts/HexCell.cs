@@ -9,16 +9,21 @@ public abstract class HexCell : MonoBehaviour , IComparable
     [SerializeField]
     public int X, Y, Z, Cost, PathCost, DestinationDistance, abba;
     public HexCell N, NE, SE, S, SW, NW;
-    HexCell parent;
-    public HexCell Parent { get { return parent; } set { parent = value; } }
+    public HexCell Parent { get; set; }
     public IEnumerable<HexCell> GetNeighbours()
     {
-        yield return N;
-        yield return NE;
-        yield return SE;
-        yield return S;
-        yield return SW;
-        yield return NW;
+        if(N != null) 
+            yield return N;
+        if (NE != null)
+            yield return NE;
+        if (SE != null)
+            yield return SE;
+        if (S != null)
+            yield return S;
+        if (SW != null)
+            yield return SW;
+        if (NW != null)
+            yield return NW;
     }
     public float GetCost
     {

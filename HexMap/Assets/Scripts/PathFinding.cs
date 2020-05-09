@@ -6,6 +6,7 @@ using System.IO.Compression;
 using System.Linq.Expressions;
 using System;
 using Microsoft.Win32.SafeHandles;
+using UnityEditor.PackageManager;
 
 public class PathFinding : MonoBehaviour
 {
@@ -22,82 +23,63 @@ public class PathFinding : MonoBehaviour
         cam = Camera.main;
         reachableCells = new List<HexCell>();
         wayCells= new List<HexCell>();
-        mainWay= new List<HexCell>();
     }
  
     public void AStar()
     {
-        Debug.Log("Astar Started");
-
         reachableCells.Add(startCell);
         while (!reachableCells.Contains(endCell))
         {
-            Debug.Log("Visit start");
-            if (wayCells.Contains(reachableCells.Min()))
-            {
-                reachableCells.Remove(reachableCells.Min());
-            }
-            else
-            {
-                Visit(reachableCells.Min(), endCell);
-            }
+            Visit(reachableCells.Min());
         }
         HexCell curCell = endCell.Parent;
         while (curCell != startCell)
         {
-            if (curCell == null)
-            {
-                Debug.Log("AAAA");
-            }
             curCell.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/FinalWayColor");
             curCell = curCell.Parent;
         }
     }
-     private void Visit(HexCell cell, HexCell endCell)
-    {
-        foreach (HexCell c in cell.GetNeighbours())
-        {
-            Debug.Log("Nei foreach");
-
-            if (c != null)
-            {
-                Debug.Log("Neil rePaint");          
-                CountCellParam(cell, c, endCell);
-                if (!wayCells.Contains(c))
-                {
-                    c.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/NeiColor");
-                }
-            }
-        }
-        wayCells.Add(cell);
-        cell.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/WayColor");
-    }
-     private void CountCellParam(HexCell prevCell, HexCell cell, HexCell endCell)
+    private void Visit(HexCell cell)
     {
         try
         {
-            cell.PathCost = prevCell.PathCost + cell.Cost;
-            if (cell.DestinationDistance == 0)
+            foreach (HexCell c in cell.GetNeighbours())
             {
-                cell.DestinationDistance = GetDistance(cell, endCell);
+                if (!wayCells.Contains(c))
+                {
+                    CountCellParam(cell, c);
+                    c.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/NeiColor");
+                }
             }
-            if ((cell.PathCost == 0 && cell!= startCell)|| prevCell.PathCost + cell.Cost < cell.PathCost)
+            reachableCells.Remove(cell);
+            wayCells.Add(cell);
+            cell.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/WayColor");
+        }
+        catch
+        {
+            Debug.Log("GAVNO");
+        }
+    }
+     private void CountCellParam(HexCell prevCell, HexCell cell)
+    {
+        if (cell.DestinationDistance == 0)
+        {
+            cell.DestinationDistance = GetDistance(cell, endCell);
+        }
+        if (cell != startCell)
+        {
+            if (cell.PathCost > prevCell.PathCost + cell.Cost || cell.PathCost == 0)
             {
                 cell.PathCost = prevCell.PathCost + cell.Cost;
                 cell.Parent = prevCell;
             }
             reachableCells.Add(cell);
-            reachableCells.Remove(prevCell);
-        }
-        catch
-        {
-            throw new ArgumentNullException();
         }
     }
 
      private int GetDistance(HexCell fromCell, HexCell toCell)
     {
-        return 10*(Math.Abs(toCell.Y- fromCell.Y)+Math.Abs(toCell.X- fromCell.X)+Math.Abs(toCell.Z- fromCell.Z))/2;
+        return (Math.Abs(toCell.Y- fromCell.Y)+Math.Abs(toCell.X- fromCell.X)+Math.Abs(toCell.Z- fromCell.Z))/2;
     }
     void Update()
     {
