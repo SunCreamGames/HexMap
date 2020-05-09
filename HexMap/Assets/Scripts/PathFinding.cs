@@ -9,23 +9,32 @@ using Microsoft.Win32.SafeHandles;
 
 public class PathFinding : MonoBehaviour
 {
+    bool canWork;
     Camera cam;
      List<HexCell> reachableCells, wayCells, mainWay;
     [SerializeField]
      HexCell startCell, endCell;
      Material tempStart, tempEnd;
+    Timer stepTimer;
     RaycastHit hit;
     Ray ray;
 
     private void Start()
     {
+        stepTimer = GetComponent<Timer>();
+        stepTimer.Duration = 3f;
+        canWork = true;
         cam = Camera.main;
         reachableCells = new List<HexCell>();
         wayCells= new List<HexCell>();
         mainWay= new List<HexCell>();
     }
  
-    public void AStar()
+    public void PathFind()
+    {
+        StartCoroutine(AStar());
+    }
+    IEnumerator AStar()
     {
         Debug.Log("Astar Started");
 
@@ -39,22 +48,26 @@ public class PathFinding : MonoBehaviour
             }
             else
             {
+                yield return new WaitForSeconds(2f);
                 Visit(reachableCells.Min(), endCell);
             }
         }
-        HexCell curCell = endCell.Parent;
-        while (curCell != startCell)
-        {
-            if (curCell == null)
-            {
-                Debug.Log("AAAA");
-            }
-            curCell.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/FinalWayColor");
-            curCell = curCell.Parent;
-        }
+        //mainWay.Insert(0, endCell);
+        //HexCell curCell = endCell.Parent;
+        //while (curCell != startCell)
+        //{
+        //    mainWay.Insert(0, curCell);
+        //    if (curCell == null)
+        //    {
+        //        Debug.Log("AAAA");
+        //    }
+        //    curCell.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/FinalWayColor");
+        //    curCell = curCell.Parent;
+        //}
     }
-     private void Visit(HexCell cell, HexCell endCell)
+    private void Visit(HexCell cell, HexCell endCell)
     {
+        canWork = false;
         foreach (HexCell c in cell.GetNeighbours())
         {
             Debug.Log("Nei foreach");
@@ -68,12 +81,14 @@ public class PathFinding : MonoBehaviour
                     c.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/NeiColor");
                 }
             }
+
         }
         wayCells.Add(cell);
         cell.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/WayColor");
-    }
+        
+     }
      private void CountCellParam(HexCell prevCell, HexCell cell, HexCell endCell)
-    {
+     {
         try
         {
             cell.PathCost = prevCell.PathCost + cell.Cost;
