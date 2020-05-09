@@ -4,15 +4,16 @@ using System.Data;
 using System;
 using UnityEngine;
 [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
-public abstract class HexCell : MonoBehaviour , IComparable
+public abstract class HexCell : MonoBehaviour, IComparable
 {
     [SerializeField]
-    public int X, Y, Z, Cost, PathCost, DestinationDistance, abba;
+    public int X, Y, Z, Cost, PathCost;
+    public float DestinationDistance, abba;
     public HexCell N, NE, SE, S, SW, NW;
     public HexCell Parent { get; set; }
     public IEnumerable<HexCell> GetNeighbours()
     {
-        if(N != null) 
+        if (N != null)
             yield return N;
         if (NE != null)
             yield return NE;

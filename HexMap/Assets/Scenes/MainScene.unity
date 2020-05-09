@@ -468,7 +468,6 @@ GameObject:
   - component: {fileID: 939089094}
   - component: {fileID: 939089095}
   - component: {fileID: 939089096}
-  - component: {fileID: 939089097}
   m_Layer: 0
   m_Name: Hex Grid
   m_TagString: Untagged
@@ -503,8 +502,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce90ada75da3d084c951202a38297b05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 10
-  height: 10
+  width: 25
+  height: 25
   fCell: {fileID: 6158593689462781980, guid: 8471c32e3a456164ba0d1d44f49f3840, type: 3}
   mCell: {fileID: 3034230941579486356, guid: 9fbff868c6928ea49ab4bfa613745584, type: 3}
   sCell: {fileID: 655107148807468573, guid: e0140d27ea6e21e45af3efadc2fa6f81, type: 3}
@@ -522,20 +521,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c191d397a5dbcb42a6e06d3add1e258, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  delay: 0.5
   startCell: {fileID: 0}
   endCell: {fileID: 0}
---- !u!114 &939089097
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 939089093}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5af679d8331ba4c4f8c8b6599cb852b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -653,10 +641,10 @@ RectTransform:
   m_Father: {fileID: 120412537}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -200, y: 0}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 50, y: -30}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1091552077
 MonoBehaviour:
@@ -702,7 +690,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 939089096}
-        m_MethodName: PathFind
+        m_MethodName: PathFind1
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

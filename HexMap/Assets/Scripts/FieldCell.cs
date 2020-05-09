@@ -8,10 +8,14 @@ public class FieldCell : HexCell
     [SerializeField]
     Material mat;
     [SerializeField]
+    GameObject outLine;
     Vector3[] vertices;
     bool isHereAFarm = false, walkable = false;
     void Start()
     {
+        outLine = Instantiate(Resources.Load<GameObject>("Prefabs/OutLine"), transform.position, Quaternion.identity,transform);
+        outLine.GetComponent<MeshRenderer>().material = mat ;
+
         mesh = GetComponent<MeshFilter>().mesh = new Mesh();
         mesh.Clear();
         mesh.name = "Hex";

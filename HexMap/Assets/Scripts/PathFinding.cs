@@ -10,70 +10,130 @@ using UnityEditor.PackageManager;
 
 public class PathFinding : MonoBehaviour
 {
-    bool canWork;
+    [SerializeField]
+    float delay = 0.1f;
     Camera cam;
-     List<HexCell> reachableCells, wayCells, mainWay;
+     List<HexCell> reachableCells, wayCells, mainWay, part1,part2;
     [SerializeField]
      HexCell startCell, endCell;
      Material tempStart, tempEnd;
-    Timer stepTimer;
     RaycastHit hit;
     Ray ray;
-
+    enum materials
+    {
+        Start = 1,Final,Nei,Way,FinalWay
+    }
+ 
     private void Start()
     {
-        stepTimer = GetComponent<Timer>();
-        stepTimer.Duration = 3f;
-        canWork = true;
         cam = Camera.main;
         reachableCells = new List<HexCell>();
         wayCells= new List<HexCell>();
+        mainWay= new List<HexCell>();
+        part1= new List<HexCell>();
+        part2= new List<HexCell>();
     }
  
-    public void PathFind()
+    public void PathFind1()
     {
+        foreach(HexCell cell in reachableCells)
+        {
+            cell.abba = cell.PathCost = 0;
+        }foreach(HexCell cell in mainWay)
+        {
+            cell.abba = cell.PathCost = 0;
+        }foreach(HexCell cell in wayCells)
+        {
+            cell.abba = cell.PathCost = 0;
+        }
+        reachableCells.Clear();
+        mainWay.Clear();
+        wayCells.Clear();
         StartCoroutine(AStar());
     }
-    IEnumerator AStar()
+    IEnumerator Dejkstra()
     {
-        Debug.Log("Astar Started");
-
-        reachableCells.Add(startCell);
         while (!reachableCells.Contains(endCell))
         {
-            Debug.Log("Visit start");
-            if (wayCells.Contains(reachableCells.Min()))
+            HexCell tempCell = GetMinForDejkstra();
+            if (wayCells.Contains(tempCell))
             {
-                reachableCells.Remove(reachableCells.Min());
+                reachableCells.Remove(tempCell);
             }
             else
             {
-                yield return new WaitForSeconds(2f);
-                Visit(reachableCells.Min(), endCell);
+                yield return new WaitForSeconds(delay);
+                Visit(tempCell);
+            }
+        }
+    }
+    IEnumerator AStar()
+    {
+        reachableCells.Add(startCell);
+        while (!reachableCells.Contains(endCell))
+        {
+            HexCell tempCell = reachableCells.Min();
+            if (wayCells.Contains(tempCell))
+            {
+                reachableCells.Remove(tempCell);
+            }
+            else
+            {
+                yield return new WaitForSeconds(delay);
+                Visit(tempCell);
             }
         }
         HexCell curCell = endCell.Parent;
+        mainWay.Add(endCell);
         while (curCell != startCell)
         {
-            curCell.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/FinalWayColor");
+            mainWay.Add(curCell);
+            Paint(curCell,(int)materials.FinalWay);
             curCell = curCell.Parent;
+        }
+        mainWay.Add(startCell);
+        mainWay.Reverse();
+    }
+    private void VisitDejkstra(HexCell cell)
+    {
+        foreach (HexCell c in cell.GetNeighbours())
+        {
+            if (!wayCells.Contains(c))
+            {
+                CountCellParam(cell, c);
+                if (c != startCell && c != endCell)
+                {
+                    Paint(c, (int)materials.Nei);
+                }
+            }
+         
+            reachableCells.Remove(cell);
+            wayCells.Add(cell);
+            if (cell != startCell && c != endCell)
+            {
+                Paint(cell, (int)materials.Way);
+            }
         }
     }
     private void Visit(HexCell cell)
     {
         foreach (HexCell c in cell.GetNeighbours())
         {
-            foreach (HexCell c in cell.GetNeighbours())
+            if (!wayCells.Contains(c))
             {
-                if (!wayCells.Contains(c))
+                CountCellParam(cell, c);
+                if (c != startCell && c != endCell)
                 {
-                    CountCellParam(cell, c);
-                    c.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/NeiColor");
+                    Paint(c, (int)materials.Nei);
                 }
             }
+         
             reachableCells.Remove(cell);
             wayCells.Add(cell);
-            cell.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/WayColor");
+            if (cell != startCell && c != endCell)
+            {
+                Paint(cell, (int)materials.Way);
+            }
         }
     }
      private void CountCellParam(HexCell prevCell, HexCell cell)
@@ -93,9 +153,9 @@ public class PathFinding : MonoBehaviour
         }
     }
 
-     private int GetDistance(HexCell fromCell, HexCell toCell)
+     private float GetDistance(HexCell fromCell, HexCell toCell)
     {
-        return (Math.Abs(toCell.Y- fromCell.Y)+Math.Abs(toCell.X- fromCell.X)+Math.Abs(toCell.Z- fromCell.Z))/2;
+        return fromCell.Cost*0.9999f*(Math.Abs(toCell.Y- fromCell.Y)+Math.Abs(toCell.X- fromCell.X)+Math.Abs(toCell.Z- fromCell.Z))/2;
     }
     void Update()
     {
@@ -160,6 +220,40 @@ public class PathFinding : MonoBehaviour
                     endCell.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/EndColor");
                 }
             }
+        }
+    }
+
+    HexCell GetMinForDejkstra()
+    {
+        HexCell cell = reachableCells[0];
+        foreach (HexCell cell1 in reachableCells)
+        {
+            if (cell1.PathCost <= cell.PathCost)
+            {
+                cell = cell1;
+            }
+        }
+        return cell;
+    }
+    void Paint(HexCell cell, int mat)
+    {
+        switch (mat)
+        {
+            case 1:
+                cell.transform.GetChild(0).GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/StartColor");
+                break;
+            case 2:
+                cell.transform.GetChild(0).GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/EndColor");
+                break;
+            case 3:
+                cell.transform.GetChild(0).GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/NeiColor");
+                break;
+            case 4:
+                cell.transform.GetChild(0).GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/WayColor");
+                break;
+            default:
+                cell.transform.GetChild(0).GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/FinalWayColor");
+                break;
         }
     }
 }

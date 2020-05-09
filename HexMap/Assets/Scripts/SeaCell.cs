@@ -10,8 +10,11 @@ public class SeaCell : HexCell
     [SerializeField]
     bool isHereAShark=false, walkable = false;
     Vector3[] vertices;
+    GameObject outLine;
     void Start()
     {
+    outLine=Instantiate(Resources.Load<GameObject>("Prefabs/OutLine"),transform.position,Quaternion.identity,transform);
+        outLine.GetComponent<MeshRenderer>().material = mat ;
         mesh = GetComponent<MeshFilter>().mesh = new Mesh();
         mesh.Clear();
         mesh.name = "Hex";

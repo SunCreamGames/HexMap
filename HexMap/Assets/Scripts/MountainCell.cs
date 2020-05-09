@@ -7,12 +7,16 @@ public class MountainCell : HexCell
     Mesh mesh;
     [SerializeField]
     Material mat;
+    GameObject outLine;
     [SerializeField]
     Vector3[] vertices;
     bool walkable = false;
-    void Start()
+    void Awake()
     {
         Cost = 25;
+        outLine = Instantiate(Resources.Load<GameObject>("Prefabs/OutLine"), transform.position, Quaternion.identity,transform);
+        outLine.GetComponent<MeshRenderer>().material = mat ;
+
 
         mesh = GetComponent<MeshFilter>().mesh = new Mesh();
         mesh.Clear();
