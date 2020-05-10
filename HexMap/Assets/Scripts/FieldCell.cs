@@ -24,7 +24,7 @@ public class FieldCell : HexCell
         {
             vertices[i] = HexMetrics.corners[i];
         }
-        Cost = 10;
+        Cost = 25;
 
 
 

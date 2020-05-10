@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Linq;
 using System.IO.Compression;
 using System.Linq.Expressions;
@@ -11,7 +12,8 @@ using UnityEditor.PackageManager;
 public class PathFinding : MonoBehaviour
 {
     [SerializeField]
-    float delay = 0.1f;
+    Slider slider;
+    float delay;
     Camera cam;
      List<HexCell> reachableCells, wayCells, mainWay, part1,part2;
     [SerializeField]
@@ -36,20 +38,15 @@ public class PathFinding : MonoBehaviour
  
     public void PathFind1()
     {
-        foreach(HexCell cell in reachableCells)
-        {
-            cell.abba = cell.PathCost = 0;
-        }foreach(HexCell cell in mainWay)
-        {
-            cell.abba = cell.PathCost = 0;
-        }foreach(HexCell cell in wayCells)
-        {
-            cell.abba = cell.PathCost = 0;
-        }
-        reachableCells.Clear();
-        mainWay.Clear();
-        wayCells.Clear();
         StartCoroutine(AStar());
+    }
+    public void PathFind2()
+    {
+        reachableCells.Add(startCell);
+        reachableCells.Add(endCell);
+        part1.Add(startCell);
+        part2.Add(endCell);
+        StartCoroutine(Dejkstra());
     }
     IEnumerator Dejkstra()
     {
@@ -63,7 +60,7 @@ public class PathFinding : MonoBehaviour
             else
             {
                 yield return new WaitForSeconds(delay);
-                Visit(tempCell);
+                VisitDejkstra(tempCell);
             }
         }
     }
@@ -152,13 +149,25 @@ public class PathFinding : MonoBehaviour
             reachableCells.Add(cell);
         }
     }
-
-     private float GetDistance(HexCell fromCell, HexCell toCell)
+    private void CountCellParamDejkstra(HexCell prevCell, HexCell cell)
     {
-        return fromCell.Cost*0.9999f*(Math.Abs(toCell.Y- fromCell.Y)+Math.Abs(toCell.X- fromCell.X)+Math.Abs(toCell.Z- fromCell.Z))/2;
+       if (cell != startCell && cell!=endCell)
+        {
+            if (cell.PathCost > prevCell.PathCost + cell.Cost || cell.PathCost == 0)
+            {
+                cell.PathCost = prevCell.PathCost + cell.Cost;
+                cell.Parent = prevCell;
+            }
+            reachableCells.Add(cell);
+        }
+    }
+    private float GetDistance(HexCell fromCell, HexCell toCell)
+    {
+        return 15*(Math.Abs(toCell.Y- fromCell.Y)+Math.Abs(toCell.X- fromCell.X)+Math.Abs(toCell.Z- fromCell.Z))/2;
     }
     void Update()
     {
+        delay = slider.value;
         if (Input.GetMouseButtonDown(0))
         {
             ray = cam.ScreenPointToRay(Input.mousePosition);

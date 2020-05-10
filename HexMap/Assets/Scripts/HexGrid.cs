@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
 
 public class HexGrid : MonoBehaviour
 {
-    [SerializeField]
-    int width = 10, height = 10;
+    int width, height;
     [SerializeField]
     FieldCell fCell;
     [SerializeField]
@@ -20,7 +20,12 @@ public class HexGrid : MonoBehaviour
     Ray ray;
     Canvas gridCanvas;
     Camera cam;
-
+   [SerializeField]
+    Slider sliderX, sliderY;
+    private void Start()
+    {
+        cam = Camera.main;
+    }
     private void Update()
     {
         if (Input.GetMouseButtonDown(0)&&Input.GetAxis("Jump")>0)
@@ -32,8 +37,10 @@ public class HexGrid : MonoBehaviour
               }
         }
     }
-    void Awake()
+    public void Generating1()
     {
+        width = (int)sliderX.value;
+        height =(int)sliderY.value;
         gridCanvas = GetComponentInChildren<Canvas>();
         cells = new HexCell[width * height];
         for (int z = 0, i = 0; z < height; z++)
@@ -43,11 +50,20 @@ public class HexGrid : MonoBehaviour
                 CreateCell(x, z, i++);
             }
         }
+        Generating2();
     }
-    
-    private void Start()
+    public void SaveMap()
     {
-        cam = Camera.main;
+        PrefabUtility.SaveAsPrefabAsset(gameObject, "Assets/Resources/Prefabs/SavedMap.prefab");
+    }
+    public void LoadMap()
+    {
+        GameObject savedGrid = Resources.Load<GameObject>("Prefabs/SavedMap");
+        Instantiate(savedGrid);
+        Destroy(gameObject);
+    }
+    private void Generating2()
+    {
         cells[0].X = cells[0].Y = cells[0].Z = 0;
         for (int i = 0; i < cells.Length; i ++)
         {
@@ -166,8 +182,8 @@ public class HexGrid : MonoBehaviour
     {
         return cells;
     }
-        void CreateCell(int x, int z, int i)
-        {
+    private void CreateCell(int x, int z, int i)
+    {
             Vector3 pos;
             if (x % 2 == 0)
             {
@@ -180,17 +196,17 @@ public class HexGrid : MonoBehaviour
 
 
             int sa = Random.Range(0, 10);
-            if (sa < 6)
+            if (sa < 4)
             {
-                cells[i] = Instantiate(sCell, pos, Quaternion.identity, null);
+                cells[i] = Instantiate(sCell, pos, Quaternion.identity, transform);
             }
-           //else if (sa <5 )
-           //{
-           //    cells[i] = Instantiate(mCell, pos, Quaternion.identity, null);
-           //}
-            else
+        else if (sa < 7)
+        {
+            cells[i] = Instantiate(mCell, pos, Quaternion.identity, transform);
+        }
+        else
             {
-                cells[i] = Instantiate(fCell, pos, Quaternion.identity, null);
+                cells[i] = Instantiate(fCell, pos, Quaternion.identity, transform);
             }
 
        

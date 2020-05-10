@@ -13,7 +13,7 @@ public class MountainCell : HexCell
     bool walkable = false;
     void Awake()
     {
-        Cost = 25;
+        Cost = 50;
         outLine = Instantiate(Resources.Load<GameObject>("Prefabs/OutLine"), transform.position, Quaternion.identity,transform);
         outLine.GetComponent<MeshRenderer>().material = mat ;
 

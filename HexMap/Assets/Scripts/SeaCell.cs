@@ -23,7 +23,7 @@ public class SeaCell : HexCell
         {
             vertices[i] = HexMetrics.corners[i];
         }
-        Cost = 1000;
+        Cost = 100;
 
 
         //for (int i = 7; i < 7+HexMetrics.corners.Length; i++)
