@@ -1,9 +1,11 @@
 ﻿using System.Collections;
+using System.Xml;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-
+using System.Xml;
+using System.Xml.Serialization;
 
 public class HexGrid : MonoBehaviour
 {
@@ -22,6 +24,7 @@ public class HexGrid : MonoBehaviour
     Camera cam;
    [SerializeField]
     Slider sliderX, sliderY;
+    string save;
     private void Start()
     {
         cam = Camera.main;
@@ -54,7 +57,7 @@ public class HexGrid : MonoBehaviour
     }
     public void SaveMap()
     {
-      
+       
     }
     public void LoadMap()
     {
@@ -168,11 +171,11 @@ public class HexGrid : MonoBehaviour
                 }
 
 
-            //Text label = Instantiate(cellLabelPrefab, null);
-            //label.rectTransform.SetParent(gridCanvas.transform, false);
-            //label.rectTransform.anchoredPosition =
-            //    new Vector2(cells[i].transform.position.x, cells[i].transform.position.z);
-            //label.text = cells[i].X.ToString() + "\n" + cells[i].Y.ToString() + "\n" + cells[i].Z.ToString();
+            Text label = Instantiate(cellLabelPrefab, null);
+            label.rectTransform.SetParent(gridCanvas.transform, false);
+            label.rectTransform.anchoredPosition =
+                new Vector2(cells[i].transform.position.x, cells[i].transform.position.z);
+            label.text = cells[i].X.ToString() + "\n" + cells[i].Y.ToString() + "\n" + cells[i].Z.ToString();
         }
             
         

@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
-using System.IO.Compression;
-using System.Linq.Expressions;
 using System;
-using Microsoft.Win32.SafeHandles;
-using UnityEditor.PackageManager;
 
 public class PathFinding : MonoBehaviour
 {
     [SerializeField]
-    Slider slider;
+    Slider delaySlider, distanceCostSlider;
     float delay;
     Camera cam;
      List<HexCell> reachableCells, wayCells, mainWay, part1,part2;
@@ -39,30 +35,6 @@ public class PathFinding : MonoBehaviour
     public void PathFind1()
     {
         StartCoroutine(AStar());
-    }
-    public void PathFind2()
-    {
-        reachableCells.Add(startCell);
-        reachableCells.Add(endCell);
-        part1.Add(startCell);
-        part2.Add(endCell);
-        StartCoroutine(Dejkstra());
-    }
-    IEnumerator Dejkstra()
-    {
-        while (!reachableCells.Contains(endCell))
-        {
-            HexCell tempCell = GetMinForDejkstra();
-            if (wayCells.Contains(tempCell))
-            {
-                reachableCells.Remove(tempCell);
-            }
-            else
-            {
-                yield return new WaitForSeconds(delay);
-                VisitDejkstra(tempCell);
-            }
-        }
     }
     IEnumerator AStar()
     {
@@ -163,11 +135,11 @@ public class PathFinding : MonoBehaviour
     }
     private float GetDistance(HexCell fromCell, HexCell toCell)
     {
-        return 15*(Math.Abs(toCell.Y- fromCell.Y)+Math.Abs(toCell.X- fromCell.X)+Math.Abs(toCell.Z- fromCell.Z))/2;
+        return 5*distanceCostSlider.value*(Math.Abs(toCell.Y- fromCell.Y)+Math.Abs(toCell.X- fromCell.X)+Math.Abs(toCell.Z- fromCell.Z))/2;
     }
     void Update()
     {
-        delay = slider.value;
+        delay = delaySlider.value;
         if (Input.GetMouseButtonDown(0))
         {
             ray = cam.ScreenPointToRay(Input.mousePosition);
@@ -230,19 +202,6 @@ public class PathFinding : MonoBehaviour
                 }
             }
         }
-    }
-
-    HexCell GetMinForDejkstra()
-    {
-        HexCell cell = reachableCells[0];
-        foreach (HexCell cell1 in reachableCells)
-        {
-            if (cell1.PathCost <= cell.PathCost)
-            {
-                cell = cell1;
-            }
-        }
-        return cell;
     }
     void Paint(HexCell cell, int mat)
     {
